@@ -104,6 +104,24 @@ Trails: {trails from frontmatter}.
 - After all thoughts are captured, report: "{N} thoughts captured from
   session {id}. Types: {count by type}."
 ```
+## Save Order
+
+Save objects in this order to build the knowledge graph correctly. Earlier types are referenced
+in the warrants, arguments, and links of later types — saving them first means those references
+resolve against already-indexed embeddings.
+
+1. **Session Arc** — the episodic anchor for the session; save first so all other objects can
+   reference it in their session context field
+2. **INSIGHTs** — foundational facts; referenced in Decision warrants
+3. **DECISIONs** — reference insights in arguments and warrants
+4. **PATTERNs** — reusable methods; often informed by insights and decisions
+5. **ARTIFACTs** — outputs; shaped by decisions and patterns
+6. **NEXT_STEPs** — actions; depend on decisions and artifacts
+7. **REFERENCEs** — external resources
+8. **OPEN_QUESTIONs** — last, so their `blocks` fields can reference already-saved objects
+
+After each `capture_thought` call, confirm the save completed before proceeding to the next.
+This prevents silent failures from going unnoticed mid-session when you have 15+ objects to save.
 
 ---
 
